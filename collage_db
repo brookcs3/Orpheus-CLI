@@ -1,0 +1,32 @@
+#!/bin/bash
+# Wrapper script for collage database operations
+
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+case "$1" in
+    build)
+        echo "Building complete collage database..."
+        python3 "$SCRIPT_DIR/build_collage_database.py"
+        ;;
+    search)
+        shift
+        python3 "$SCRIPT_DIR/search_collage_db.py" "$@"
+        ;;
+    stats)
+        python3 "$SCRIPT_DIR/search_collage_db.py" --stats
+        ;;
+    *)
+        echo "Orpheus Collage Database Tool"
+        echo "=============================="
+        echo ""
+        echo "Usage:"
+        echo "  ./collage_db build                    # Build/update the complete database"
+        echo "  ./collage_db search --artist 'Name'   # Find collages containing an artist"
+        echo "  ./collage_db search --album 'Name'    # Find collages containing an album"
+        echo "  ./collage_db stats                    # Show database statistics"
+        echo ""
+        echo "Examples:"
+        echo "  ./collage_db search --artist 'Ultramagnetic'"
+        echo "  ./collage_db search --album 'Critical Beatdown'"
+        ;;
+esac

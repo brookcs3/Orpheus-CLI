@@ -1,0 +1,36 @@
+{
+  "name": "90s Hip Hop Classics",
+  "description": "Essential 90s hip hop albums that defined the era",
+  "created_by": "Orpheus Crate Manager",
+  "preferences": {
+    "media": "vinyl",
+    "encoding": "v0"
+  },
+  "albums": [
+    {
+      "artist": "Nas",
+      "album": "Illmatic",
+      "notes": "Considered one of the greatest hip hop albums ever"
+    },
+    {
+      "artist": "Wu-Tang Clan",
+      "album": "Enter the Wu-Tang (36 Chambers)",
+      "notes": "Revolutionary debut album"
+    },
+    {
+      "artist": "Notorious B.I.G.",
+      "album": "Ready to Die",
+      "notes": "Biggie's masterpiece debut"
+    },
+    {
+      "artist": "A Tribe Called Quest",
+      "album": "The Low End Theory",
+      "notes": "Jazz-influenced hip hop classic"
+    },
+    {
+      "artist": "Dr. Dre",
+      "album": "The Chronic",
+      "notes": "G-funk masterpiece"
+    }
+  ]
+}

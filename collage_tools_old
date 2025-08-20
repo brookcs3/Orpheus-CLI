@@ -1,0 +1,244 @@
+#!/bin/bash
+# Orpheus Collage Tools - Streamlined Suite
+
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+# Interactive prompts function
+interactive_mode() {
+    echo "🎵 Orpheus Collage Tools - Interactive Mode"
+    echo "=========================================="
+    echo ""
+    echo "What would you like to do?"
+    echo "1. 🎤 Find artist albums & releases"
+    echo "2. 🔍 Find which collages contain a specific album"
+    echo "3. ⬇️  Download torrents from a collage"
+    echo "4. ❌ Exit"
+    echo ""
+    read -p "Choose option (1-4): " choice
+    
+    case "$choice" in
+        1)
+            echo ""
+            echo "🎤 Find Artist Albums & Releases"
+            echo "================================"
+            read -p "Enter artist name: " artist
+            
+            if [[ -z "$artist" ]]; then
+                echo "❌ Artist name is required!"
+                exit 1
+            fi
+            
+            echo ""
+            echo "🎵 Release search options:"
+            echo "1. All releases (including compilations)"
+            echo "2. Official releases only"
+            echo "3. Search specific release"
+            echo ""
+            read -p "Choose option (1-3): " search_option
+            
+            case "$search_option" in
+                1)
+                    echo ""
+                    echo "🔍 Searching for all releases by $artist..."
+                    python3 "$SCRIPT_DIR/find_album_collages.py" --artist "$artist" --interactive
+                    ;;
+                2)
+                    echo ""
+                    echo "🔍 Searching for official releases by $artist..."
+                    python3 "$SCRIPT_DIR/find_album_collages.py" --artist "$artist" --official-only --interactive
+                    ;;
+                3)
+                    echo ""
+                    read -p "Enter album name: " album
+                    if [[ -z "$album" ]]; then
+                        echo "❌ Album name is required!"
+                        exit 1
+                    fi
+                    echo ""
+                    echo "🔍 Searching for '$album' by $artist..."
+                    python3 "$SCRIPT_DIR/find_album_collages.py" --artist "$artist" --album "$album" --interactive
+                    ;;
+                *)
+                    echo "❌ Invalid choice!"
+                    exit 1
+                    ;;
+            esac
+            ;;
+            
+        2)
+            echo ""
+            echo "🔍 Find Collages Containing Specific Album"
+            echo "=========================================="
+            read -p "Enter artist name: " artist
+            read -p "Enter album name: " album
+            
+            if [[ -z "$artist" || -z "$album" ]]; then
+                echo "❌ Both artist and album names are required!"
+                exit 1
+            fi
+            
+            echo ""
+            echo "🔍 Searching for collages containing '$artist - $album'..."
+            python3 "$SCRIPT_DIR/find_album_collages.py" --artist "$artist" --album "$album"
+            ;;
+            
+        3)
+            echo ""
+            echo "⬇️  Download Torrents from Collage"
+            echo "=================================="
+            read -p "Enter collage ID: " collage_id
+            
+            if [[ -z "$collage_id" ]]; then
+                echo "❌ Collage ID is required!"
+                exit 1
+            fi
+            
+            echo ""
+            echo "🎵 Encoding Preference (REQUIRED):"
+            echo "1. 320 (MP3 320 CBR - high quality, compatible)"
+            echo "2. V0 (MP3 V0 VBR - variable bitrate, excellent quality)"
+            echo "3. FLAC (Lossless - highest quality, larger files)"
+            echo ""
+            read -p "Choose encoding (1-3): " encoding_choice
+            
+            case "$encoding_choice" in
+                1) prefer="--prefer-320" ;;
+                2) prefer="--prefer-v0" ;;
+                3) prefer="--prefer-flac" ;;
+                *)
+                    echo "❌ Invalid choice! Defaulting to 320."
+                    prefer="--prefer-320"
+                    ;;
+            esac
+            
+            echo ""
+            read -p "Maximum torrents to download (default: all): " max_torrents
+            
+            echo ""
+            echo "⬇️  Starting download..."
+            if [[ -n "$max_torrents" ]]; then
+                python3 "$SCRIPT_DIR/download_collage_torrents.py" "$collage_id" "$prefer" --max "$max_torrents"
+            else
+                python3 "$SCRIPT_DIR/download_collage_torrents.py" "$collage_id" "$prefer"
+            fi
+            ;;
+            
+        4)
+            echo "👋 Goodbye!"
+            exit 0
+            ;;
+            
+        *)
+            echo "❌ Invalid choice!"
+            exit 1
+            ;;
+    esac
+}
+
+case "$1" in
+    find-album)
+        # Find which collages contain an album (web scraping + API)
+        shift
+        python3 "$SCRIPT_DIR/find_album_collages.py" "$@"
+        ;;
+    
+    download)
+        # Download torrent files from a collage (--prefer is MANDATORY)
+        shift
+        collage_id="$1"
+        shift
+        
+        # Check if --prefer option is provided
+        prefer_found=false
+        for arg in "$@"; do
+            if [[ "$arg" == --prefer-* ]]; then
+                prefer_found=true
+                break
+            fi
+        done
+        
+        if [[ "$prefer_found" == false ]]; then
+            echo "❌ ERROR: --prefer option is MANDATORY!"
+            echo ""
+            echo "Required encoding preference:"
+            echo "  --prefer-320    # MP3 320 CBR"
+            echo "  --prefer-v0     # MP3 V0 VBR" 
+            echo "  --prefer-flac   # FLAC Lossless"
+            echo ""
+            echo "Example: ./collage_tools download 6936 --prefer-320"
+            exit 1
+        fi
+        
+        python3 "$SCRIPT_DIR/download_collage_torrents.py" "$collage_id" "$@"
+        ;;
+        
+    quick-search)
+        # Quick search for an artist/album's collages
+        shift
+        artist=""
+        album=""
+        
+        while [[ $# -gt 0 ]]; do
+            case "$1" in
+                --artist)
+                    artist="$2"
+                    shift 2
+                    ;;
+                --album)
+                    album="$2"
+                    shift 2
+                    ;;
+                *)
+                    shift
+                    ;;
+            esac
+        done
+        
+        if [[ -n "$artist" ]] || [[ -n "$album" ]]; then
+            echo "🔍 Quick search for collages..."
+            python3 "$SCRIPT_DIR/find_album_collages.py" --artist "$artist" --album "$album"
+        else
+            echo "Usage: ./collage_tools quick-search --artist 'Name' --album 'Name'"
+        fi
+        ;;
+    
+    "")
+        # No arguments - start interactive mode
+        interactive_mode
+        ;;
+        
+    *)
+        echo "🎵 Orpheus Collage Tools - Streamlined Suite"
+        echo "============================================="
+        echo ""
+        echo "🌐 Live Search Commands:"
+        echo "  ./collage_tools find-album --artist 'Name'         # Find all albums by artist"
+        echo "  ./collage_tools find-album --artist 'Name' --album 'Name'"
+        echo "                                                     # Find collages containing album"
+        echo "  ./collage_tools find-album --album 'Name'         # Find albums by name"
+        echo ""
+        echo "⬇️  Download Commands (--prefer is MANDATORY):"
+        echo "  ./collage_tools download <collage_id> --prefer-320 # Prefer MP3 320 CBR"
+        echo "  ./collage_tools download <collage_id> --prefer-v0  # Prefer MP3 V0 VBR"
+        echo "  ./collage_tools download <collage_id> --prefer-flac # Prefer FLAC Lossless"
+        echo "  ./collage_tools download <collage_id> --prefer-320 --max 10 # Download max 10"
+        echo ""
+        echo "🎮 Interactive Mode:"
+        echo "  ./collage_tools                                   # Run interactive prompts"
+        echo ""
+        echo "Examples:"
+        echo "  ./collage_tools find-album --artist 'The Prodigy'                    # All Prodigy albums"
+        echo "  ./collage_tools find-album --artist 'The Prodigy' --official-only    # Only official releases"
+        echo "  ./collage_tools find-album --artist \"Ultramagnetic MC's\" --album \"Critical Beatdown\""
+        echo "  ./collage_tools download 6936 --prefer-320       # Download 'Sampled by The Prodigy' collage"
+        echo "  ./collage_tools download 1361 --prefer-flac --max 5 # Download 5 FLAC-preferred torrents"
+        echo ""
+        echo "Key Features:"
+        echo "  ✅ Live collage discovery (solves API limitations)"
+        echo "  ✅ Smart release sorting using real API releaseType data"
+        echo "  ✅ Mandatory encoding preferences (protects your account)"
+        echo "  ✅ Interactive mode for easy use"
+        echo ""
+        echo "⚠️  Note: This tool downloads .torrent files, not actual music files."
+        ;;
+esac

@@ -1,0 +1,353 @@
+#!/bin/bash
+# Orpheus Collage Tools - Enhanced with Crate Functionality
+
+SCRIPT_DIR=$(dirname "$0")
+
+# Interactive prompts function
+interactive_mode() {
+    while true; do
+        echo "🎵 Orpheus Collage Tools - Interactive Mode"
+        echo "==========================================="
+        echo ""
+        echo "What would you like to do?"
+        echo "1. 🎤 Find artist albums & releases (with crates)"
+        echo "2. 🔍 Find which collages contain a specific album"
+        echo "3. ⬇️  Download torrents from a collage"
+        echo "4. 📦 Manage crates"
+        echo "5. 🎯 Load crate and browse"
+        echo "6. ❌ Exit"
+        echo ""
+        read -p "Choose option (1-6): " choice
+
+        case $choice in
+            1)
+                echo ""
+                echo "🎤 Find Artist Albums & Releases (Enhanced with Crates)"
+                echo "======================================================"
+                read -p "Enter artist name: " artist
+
+                if [ -z "$artist" ]; then
+                    echo "❌ Artist name is required!"
+                    echo ""
+                    continue
+                fi
+
+                echo ""
+                echo "🎵 Release search options:"
+                echo "1. All releases (including compilations)"
+                echo "2. Official releases only"
+                echo "3. Search specific release"
+                echo ""
+                read -p "Choose option (1-3): " search_option
+
+                case $search_option in
+                    1)
+                        echo ""
+                        echo "🔍 Searching for all releases by $artist..."
+                        # Use the original working script - no changes to search!
+                        python3 "$SCRIPT_DIR/find_album_collages.py" --artist "$artist" --interactive
+                        result=$?
+                        ;;
+                    2)
+                        echo ""
+                        echo "🔍 Searching for official releases by $artist..."
+                        # Use the original working script - no changes to search!
+                        python3 "$SCRIPT_DIR/find_album_collages.py" --artist "$artist" --official-only --interactive
+                        result=$?
+                        ;;
+                    3)
+                        echo ""
+                        read -p "Enter album/release name: " album
+                        if [ -z "$album" ]; then
+                            echo "❌ Album name is required!"
+                            echo ""
+                            continue
+                        fi
+                        echo ""
+                        echo "🔍 Searching for '$album' by $artist..."
+                        # Use the original working script - no changes to search!
+                        python3 "$SCRIPT_DIR/find_album_collages.py" --artist "$artist" --album "$album" --interactive
+                        result=$?
+                        ;;
+                    *)
+                        echo "❌ Invalid choice!"
+                        echo ""
+                        continue
+                        ;;
+                esac
+                ;;
+
+            2)
+                echo ""
+                echo "🔍 Find Which Collages Contain an Album"
+                echo "======================================="
+                read -p "Enter artist name: " artist
+                read -p "Enter album name: " album
+
+                if [ -z "$artist" ] || [ -z "$album" ]; then
+                    echo "❌ Both artist and album names are required!"
+                    echo ""
+                    continue
+                fi
+
+                echo ""
+                echo "🔍 Searching for '$album' by $artist in collages..."
+                python3 "$SCRIPT_DIR/find_album_collages.py" --artist "$artist" --album "$album" --show-collages
+                result=$?
+                ;;
+
+            3)
+                echo ""
+                echo "⬇️  Download Torrents from a Collage"
+                echo "===================================="
+                read -p "Enter collage ID: " collage_id
+
+                if [ -z "$collage_id" ]; then
+                    echo "❌ Collage ID is required!"
+                    echo ""
+                    continue
+                fi
+
+                echo ""
+                echo "📀 Choose preferred encoding:"
+                echo "1. MP3 320 CBR"
+                echo "2. MP3 V0 VBR"
+                echo "3. FLAC Lossless"
+                echo ""
+                read -p "Choose option (1-3): " encoding_choice
+
+                case $encoding_choice in
+                    1) prefer="--prefer-320" ;;
+                    2) prefer="--prefer-v0" ;;
+                    3) prefer="--prefer-flac" ;;
+                    *)
+                        echo "❌ Invalid choice!"
+                        echo ""
+                        continue
+                        ;;
+                esac
+
+                echo ""
+                echo "⬇️ Starting download from collage ID: $collage_id"
+                if [ -f "$SCRIPT_DIR/download_collage_torrents.py" ]; then
+                    python3 "$SCRIPT_DIR/download_collage_torrents.py" "$collage_id" "$prefer"
+                fi
+                ;;
+
+            4)
+                echo ""
+                echo "📦 Crate Management"
+                echo "=================="
+                echo "1. 📋 List existing crates"
+                echo "2. 📝 Create new crate"
+                echo "3. ⬇️  Download a crate"
+                echo "4. 🔙 Back to main menu"
+                echo ""
+                read -p "Choose option (1-4): " crate_choice
+
+                case $crate_choice in
+                    1)
+                        python3 "$SCRIPT_DIR/download_crate.py" --list-crates
+                        ;;
+                    2)
+                        read -p "Enter crate name: " crate_name
+                        if [ -n "$crate_name" ]; then
+                            python3 "$SCRIPT_DIR/download_crate.py" --create-crate "$crate_name"
+                        else
+                            echo "❌ Please provide a crate name"
+                        fi
+                        ;;
+                    3)
+                        echo ""
+                        python3 "$SCRIPT_DIR/download_crate.py" --list-crates
+                        echo ""
+                        read -p "Enter crate name to download: " download_crate
+                        if [ -n "$download_crate" ]; then
+                            python3 "$SCRIPT_DIR/download_crate.py" --download-crate "$download_crate"
+                        else
+                            echo "❌ Please provide a crate name"
+                        fi
+                        ;;
+                    4)
+                        continue
+                        ;;
+                    *)
+                        echo "❌ Invalid choice!"
+                        ;;
+                esac
+                ;;
+
+            5)
+                echo ""
+                echo "🎯 Load Crate and Browse"
+                echo "======================="
+                python3 "$SCRIPT_DIR/download_crate.py" --list-crates
+                echo ""
+                read -p "Enter crate name to load: " load_crate
+                if [ -n "$load_crate" ]; then
+                    read -p "Enter artist to search: " artist
+                    if [ -n "$artist" ]; then
+                        echo "🔍 Searching with crate functionality..."
+                        # Use original script - search works perfectly!
+                        python3 "$SCRIPT_DIR/find_album_collages.py" --artist "$artist" --interactive
+                    else
+                        echo "❌ Artist name is required for browsing"
+                    fi
+                else
+                    echo "❌ Please provide a crate name"
+                fi
+                ;;
+
+            6)
+                echo "👋 Goodbye!"
+                exit 0
+                ;;
+
+            *)
+                echo "❌ Invalid choice!"
+                echo ""
+                continue
+                ;;
+        esac
+        
+        # Pause before showing menu again
+        if [ $result -ne 2 ] 2>/dev/null; then
+            echo ""
+            read -p "Press Enter to return to main menu..."
+        fi
+        echo ""
+    done
+}
+
+case $1 in
+    crate)
+        case $2 in
+            list)
+                python3 "$SCRIPT_DIR/download_crate.py" --list-crates
+                ;;
+            create)
+                if [ -n "$3" ]; then
+                    python3 "$SCRIPT_DIR/download_crate.py" --create-crate "$3"
+                else
+                    echo "Usage: ./collage_tools crate create <crate_name>"
+                fi
+                ;;
+            download)
+                if [ -n "$3" ]; then
+                    python3 "$SCRIPT_DIR/download_crate.py" --download-crate "$3"
+                else
+                    echo "Usage: ./collage_tools crate download <crate_name>"
+                fi
+                ;;
+            *)
+                echo "📦 Crate Commands:"
+                echo "  ./collage_tools crate list             # List all crates"
+                echo "  ./collage_tools crate create <n>       # Create new crate"
+                echo "  ./collage_tools crate download <n>     # Download crate"
+                ;;
+        esac
+        ;;
+        
+    find-album)
+        shift
+        # Always use the original working script - NO changes to search functionality!
+        python3 "$SCRIPT_DIR/find_album_collages.py" "$@"
+        ;;
+
+    download)
+        # Download torrent files from a collage (--prefer is MANDATORY)
+        shift
+        collage_id="$1"
+        shift
+
+        # Check if --prefer option is provided
+        prefer_found=false
+        for arg in "$@"; do
+            case $arg in
+                --prefer-*)
+                    prefer_found=true
+                    break
+                    ;;
+            esac
+        done
+
+        if [ "$prefer_found" = false ]; then
+            echo "❌ ERROR: --prefer option is MANDATORY!"
+            echo ""
+            echo "Required encoding preference:"
+            echo "  --prefer-320    # MP3 320 CBR"
+            echo "  --prefer-v0     # MP3 V0 VBR"
+            echo "  --prefer-flac   # FLAC Lossless"
+            echo ""
+            echo "Example: ./collage_tools download 6936 --prefer-320"
+            exit 1
+        fi
+
+        python3 "$SCRIPT_DIR/download_collage_torrents.py" "$collage_id" "$@"
+        ;;
+
+    quick-search)
+        # Quick search for an artist/album's collages
+        shift
+        artist=""
+        album=""
+
+        while [ $# -gt 0 ]; do
+            case $1 in
+                --artist)
+                    artist="$2"
+                    shift 2
+                    ;;
+                --album)
+                    album="$2"
+                    shift 2
+                    ;;
+                *)
+                    shift
+                    ;;
+            esac
+        done
+
+        if [ -n "$artist" ] || [ -n "$album" ]; then
+            echo "🔍 Quick search for collages..."
+            python3 "$SCRIPT_DIR/find_album_collages.py" --artist "$artist" --album "$album"
+        else
+            echo "Usage: ./collage_tools quick-search --artist 'Name' --album 'Name'"
+        fi
+        ;;
+
+    "")
+        # No arguments - start interactive mode
+        interactive_mode
+        ;;
+
+    *)
+        echo "🎵 Orpheus Collage Tools - Enhanced with Crates"
+        echo "==============================================="
+        echo ""
+        echo "🌐 Live Search Commands:"
+        echo "  ./collage_tools find-album --artist 'Name' --interactive"
+        echo "  ./collage_tools find-album --artist 'Name' --album 'Name'"
+        echo ""
+        echo "📦 Crate Commands:"
+        echo "  ./collage_tools crate list                    # List all crates"
+        echo "  ./collage_tools crate create <n>             # Create new crate"
+        echo "  ./collage_tools crate download <n>           # Download crate"
+        echo ""
+        echo "⬇️  Download Commands (--prefer is MANDATORY):"
+        echo "  ./collage_tools download [collage_id] --prefer-320  # MP3 320"
+        echo "  ./collage_tools download [collage_id] --prefer-v0   # MP3 V0"
+        echo "  ./collage_tools download [collage_id] --prefer-flac # FLAC"
+        echo ""
+        echo "🔍 Quick Search:"
+        echo "  ./collage_tools quick-search --artist 'Name' --album 'Name'"
+        echo ""
+        echo "🎯 Interactive Mode:"
+        echo "  ./collage_tools                              # Start guided prompts"
+        echo ""
+        echo "💡 Examples:"
+        echo "  ./collage_tools find-album --artist 'The Prodigy' --interactive"
+        echo "  ./collage_tools crate create 'My Favorites'"
+        echo "  ./collage_tools crate download 'My Favorites'"
+        ;;
+esac

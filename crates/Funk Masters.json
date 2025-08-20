@@ -1,0 +1,22 @@
+{
+  "name": "Funk Masters",
+  "description": "Music collection: Funk Masters",
+  "created_by": "Orpheus Crate Manager",
+  "preferences": {
+    "media": "vinyl",
+    "encoding": "flac"
+  },
+  "albums": [
+    {
+      "artist": "Example Artist",
+      "album": "Example Album",
+      "notes": "Optional notes about this album"
+    },
+    {
+      "artist": "Another Artist",
+      "album": "Another Album",
+      "group_id": 12345,
+      "notes": "You can also specify direct group_id instead of artist/album"
+    }
+  ]
+}

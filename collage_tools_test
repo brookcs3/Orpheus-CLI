@@ -1,0 +1,13 @@
+#!/bin/bash
+
+echo \"Args: $@\"
+echo \"First: $1\"
+
+case \"$1\" in
+    crate)
+        echo \"MATCHED CRATE\"
+        ;;
+    *)
+        echo \"DEFAULT CASE\"
+        ;;
+esac
