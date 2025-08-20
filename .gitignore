@@ -1,5 +1,6 @@
 # Sensitive configuration files
 config.json
+config.json.*
 
 # Python cache and compiled files
 __pycache__/
@@ -102,3 +103,6 @@ logs/
 
 # Cache directories
 cache/
+
+# Reference files for development
+resources/docs/reference_files/

@@ -286,7 +286,16 @@ class OrpheusAlbumDownloader:
             if response.status == 200:
                 content = await response.read()
                 
-                downloads_dir = Path.home() / 'Downloads'
+                # Cross-platform download directory
+                import platform
+                system = platform.system()
+                if system == "Windows":
+                    downloads_dir = Path.home() / 'Documents' / 'Orpheus'
+                elif system == "Darwin":  # macOS
+                    downloads_dir = Path.home() / 'Documents' / 'Orpheus'
+                else:  # Linux and other Unix-like systems
+                    downloads_dir = Path.home() / 'Documents' / 'Orpheus'
+                downloads_dir.mkdir(parents=True, exist_ok=True)
                 file_path = downloads_dir / filename
                 
                 with open(file_path, 'wb') as f:

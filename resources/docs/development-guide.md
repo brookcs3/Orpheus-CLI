@@ -174,22 +174,29 @@ Based on user feedback and testing, the following improvements are planned:
 ```
 ~/.orpheus/
 ├── collage_tools                    # Main executable bash script
-├── find_album_collages.py          # Core search functionality
-├── download_collage_torrents.py    # Collage download functionality
-├── download_crate.py               # Crate management system
-├── config.json                     # Optional configuration
-├── crates/                         # Saved crates directory
-│   ├── Funk Masters.json           # User-created wishlists
-│   ├── 90s Hip Hop Classics.json
-│   └── 25_forgotten_female_rap.json
-├── src/                           # Additional source modules
-├── Notes.md                       # Development notes and improvement plans
-└── requirements.txt               # Python dependencies
+├── config.json                     # → symlink to ~/.orpheus-config/config.json
+├── requirements.txt                 # Python dependencies
+├── lib/                            # Core functionality
+│   ├── find_album_collages.py     # Core search functionality
+│   ├── download_collage_torrents.py # Collage download functionality
+│   ├── download_crate.py           # Crate management system
+│   └── download_album_preferences.py # Core download functionality
+└── resources/                      # Additional documentation and future features
+    ├── docs/                       # Full documentation
+    ├── mcp/                        # MCP server (planned integration)
+    └── data/                       # User data
+        └── crates/                 # User-created wishlists
+            ├── Funk Masters.json
+            ├── 90s Hip Hop Classics.json
+            └── 25_forgotten_female_rap.json
 ```
 
 ## Testing and Development
 
 No specific test framework is configured. The project relies on manual testing through the interactive interface and command-line operations.
+
+### Reference Files
+Development reference files (API responses, HTML examples) are stored in `resources/docs/reference_files/` but are excluded from git via `.gitignore`. These help understand API structures without exposing potentially large response files in the repository.
 
 For development and debugging:
 - All downloads save to `~/Downloads/` as `.torrent` files

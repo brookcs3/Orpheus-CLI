@@ -7,16 +7,30 @@ import asyncio
 import json
 import argparse
 import sys
+import os
 from pathlib import Path
 from typing import List, Dict
-import os
+
+# Add current directory to path for local imports
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 from download_album_preferences import OrpheusAlbumDownloader
 
 class MusicCrateManager:
     def __init__(self):
-        self.crates_dir = Path.home() / '.orpheus' / 'crates'
-        self.downloads_dir = Path.home() / 'Downloads'
+        # Use relative path from the script location to find resources/data/crates
+        script_dir = Path(__file__).parent.parent  # Go up from lib/ to project root
+        self.crates_dir = script_dir / 'resources' / 'data' / 'crates'
+        # Cross-platform download directory
+        import platform
+        system = platform.system()
+        if system == "Windows":
+            self.downloads_dir = Path.home() / 'Documents' / 'Orpheus'
+        elif system == "Darwin":  # macOS
+            self.downloads_dir = Path.home() / 'Documents' / 'Orpheus'
+        else:  # Linux and other Unix-like systems
+            self.downloads_dir = Path.home() / 'Documents' / 'Orpheus'
         self.crates_dir.mkdir(exist_ok=True)
+        self.downloads_dir.mkdir(parents=True, exist_ok=True)
 
     def create_crate_template(self, crate_name: str) -> str:
         """Create a template crate file"""

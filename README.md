@@ -1,102 +1,106 @@
-# Orpheus MCP & CLI
+# Orpheus Collage Tools
 
-**Intelligent torrent discovery and downloading for Orpheus with interactive MCP integration**
+Interactive CLI for discovering, browsing, and downloading music releases from Orpheus.network private tracker.
 
-This project provides a comprehensive set of tools for interacting with the Orpheus music platform, including a powerful command-line interface (CLI) and an interactive MCP server.
+## Quick Start
 
-## Features
+### 1. Setup Configuration
+```bash
+# Create your config directory (first time only)
+mkdir -p ~/.orpheus-config
 
-- **Artist and Album Search:** Search for artists and albums, and view a list of available releases.
-- **Collage Discovery:** Discover which collages an album belongs to using a hybrid web scraping and API approach.
-- **Intelligent Downloading:** Download torrents from collages with smart encoding preferences and fallback options.
-- **Offline Database:** Build and search an offline database of collage information for fast, efficient searching.
-- **Interactive MCP:** Use the interactive MCP server to guide you through the process of searching for and downloading music.
+# Create your config file with your Orpheus credentials
+cat > ~/.orpheus-config/config.json << EOF
+{
+  "username": "your_orpheus_username",
+  "password": "your_orpheus_password", 
+  "api_key": "your_orpheus_api_key"
+}
+EOF
 
-## Installation
+# The project will automatically find your config via symlink
+ln -sf ~/.orpheus-config/config.json config.json
+```
 
-1. **Clone the repository:**
+### 2. Install Dependencies
+```bash
+pip install -r requirements.txt
+```
 
-   ```bash
-   git clone <repository-url>
-   cd .orpheus
-   ```
-
-2. **Install the dependencies:**
-
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-3. **Configure your credentials:**
-
-   Create a file named `config.json` in the root of the project directory with the following content:
-
-   ```json
-   {
-     "username": "your_username",
-     "password": "your_password",
-     "api_key": "your_api_key"
-   }
-   ```
-
-## Usage
-
-### Interactive Mode (Primary Interface)
-
-The main way to use the tools is through the interactive menu:
-
+### 3. Run the Interactive CLI
 ```bash
 ./collage_tools
 ```
 
-This provides a guided interface with options for:
-1. 🎤 Find artist albums & releases (with crates)
-2. 🔍 Find which collages contain a specific album  
-3. ⬇️ Download torrents from a collage
-4. 📦 Manage crates
-5. 🎯 Load crate and browse
-6. ❌ Exit
+## Features
 
-### Command Line Interface
+- **🎤 Artist Search** - Find all releases by artist with smart filtering (Albums, EPs, Singles, etc.)
+- **🔍 Collage Discovery** - See which curated collections contain specific albums  
+- **📦 Crate System** - Create wishlists and bulk download later
+- **⬇️ Bulk Downloads** - Download entire collages with format preferences
+- **🎯 Release-Based Organization** - View by actual pressings/labels, not just file formats
+- **🎵 Interactive Browsing** - One album per page with complete metadata and navigation
 
-For direct commands and scripting:
+## What Makes This Better Than the Main Site
 
-```bash
-# Search for artist releases
-./collage_tools find-album --artist "The Prodigy" --interactive
+- **Enhanced filtering** - Show just Beatles singles (impossible on main site)
+- **Release-based organization** - See all 23 pressings of "The Fat Of The Land" with different labels/catalog numbers
+- **Collage navigation** - Discover music through curated collections with improved interface
+- **Wishlist system** - Add albums while browsing, download all at once later
+- **Format preferences** - Bulk download with FLAC/320/V0 preferences
 
-# Download from collage (--prefer flag required)
-./collage_tools download 6936 --prefer-flac
+## Planned Features
 
-# Manage crates
-./collage_tools crate list
-./collage_tools crate create "My Collection"
+- **🤖 MCP Integration** - Model Context Protocol server for AI assistant interaction
+- **🎵 Track Search** - Search by track name with fuzzy matching
+- **🔄 Enhanced UI** - Improved visual design and navigation persistence
+- **📊 Better Crate Management** - Numbered selection and enhanced browsing
+
+## Directory Structure
+
+```
+orpheus-cli/
+├── collage_tools           # Main interactive program
+├── config.json            # → symlink to ~/.orpheus-config/config.json
+├── requirements.txt        # Python dependencies
+├── lib/                   # Core functionality
+└── resources/            # Additional documentation and future features
+    ├── docs/             # Full documentation & automation examples
+    ├── mcp/              # MCP server (planned integration)
+    └── data/             # User data
+        └── crates/       # Your saved wishlists
 ```
 
-### MCP Integration
+## Documentation
 
-MCP server functionality (future development):
+- **Quick Reference**: `resources/docs/quick-reference-card.md`  
+- **Full User Guide**: `resources/docs/user-guide.md`
+- **Scripting Guide**: `resources/docs/scripting-automation-guide.md`
+- **Custom Examples**: `resources/docs/custom-automation-examples.md`
+- **Development Guide**: `resources/docs/development-guide.md`
+
+## Download Location
+
+All torrent files are downloaded to:
+- **macOS/Windows**: `~/Documents/Orpheus/`
+- **Linux**: `~/Documents/Orpheus/`
+
+Individual torrents go directly to this folder, while collage downloads create subfolders like `collage_6936_Sampled_by_The_Prodigy/`.
+
+## Security
+
+Your Orpheus credentials are stored in `~/.orpheus-config/config.json` outside the project directory and will never be committed to git.
+
+## Example Workflow
 
 ```bash
-python mcp/server.py
+# Start interactive mode
+./collage_tools
+
+# 1. Search for artist → filter to Albums only → browse releases
+# 2. Add interesting albums to a crate while browsing  
+# 3. Later: bulk download entire crate with FLAC preference
+# 4. Or: discover new music by exploring collages albums belong to
 ```
 
-## Planned Improvements
-
-### High Priority UX Improvements
-1. **Allow artist-only search** - Find collages option should work with just artist name
-2. **Improve navigation persistence** - Menu should stay accessible throughout workflows  
-3. **Better collage workflow integration** - Streamline collage discovery → download process
-4. **Numbered crate selection** - Replace typing crate names with number selection
-5. **Fix crate browsing** - Show crate contents without requiring artist search
-
-### Feature Enhancements  
-6. **Track search functionality** - Search by track name + artist with fuzzy matching
-7. **Improved GUI visual design** - Better visual hierarchy and formatting consistency
-8. **Enhanced menu persistence** - Universal navigation available in all workflows
-
-### Current Strengths
-- **Release-based organization** - Groups by actual pressings/labels, not just file formats
-- **Powerful collage discovery** - Shows membership across dozens of curated collections
-- **Reliable bulk downloads** - 97%+ success rates for large collection downloads
-- **Intuitive navigation** - Single-key commands (n/t/c/d/s/h) for efficient browsing
+This tool transforms the Orpheus experience from tedious web browsing into efficient music discovery.

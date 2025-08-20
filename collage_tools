@@ -45,14 +45,14 @@ interactive_mode() {
                         echo ""
                         echo "🔍 Searching for all releases by $artist..."
                         # Use the original working script - no changes to search!
-                        python3 "$SCRIPT_DIR/find_album_collages.py" --artist "$artist" --interactive
+                        python3 "$SCRIPT_DIR/lib/find_album_collages.py" --artist "$artist" --interactive
                         result=$?
                         ;;
                     2)
                         echo ""
                         echo "🔍 Searching for official releases by $artist..."
                         # Use the original working script - no changes to search!
-                        python3 "$SCRIPT_DIR/find_album_collages.py" --artist "$artist" --official-only --interactive
+                        python3 "$SCRIPT_DIR/lib/find_album_collages.py" --artist "$artist" --official-only --interactive
                         result=$?
                         ;;
                     3)
@@ -66,7 +66,7 @@ interactive_mode() {
                         echo ""
                         echo "🔍 Searching for '$album' by $artist..."
                         # Use the original working script - no changes to search!
-                        python3 "$SCRIPT_DIR/find_album_collages.py" --artist "$artist" --album "$album" --interactive
+                        python3 "$SCRIPT_DIR/lib/find_album_collages.py" --artist "$artist" --album "$album" --interactive
                         result=$?
                         ;;
                     *)
@@ -92,7 +92,7 @@ interactive_mode() {
 
                 echo ""
                 echo "🔍 Searching for '$album' by $artist in collages..."
-                python3 "$SCRIPT_DIR/find_album_collages.py" --artist "$artist" --album "$album" --show-collages
+                python3 "$SCRIPT_DIR/lib/find_album_collages.py" --artist "$artist" --album "$album" --show-collages
                 result=$?
                 ;;
 
@@ -129,8 +129,8 @@ interactive_mode() {
 
                 echo ""
                 echo "⬇️ Starting download from collage ID: $collage_id"
-                if [ -f "$SCRIPT_DIR/download_collage_torrents.py" ]; then
-                    python3 "$SCRIPT_DIR/download_collage_torrents.py" "$collage_id" "$prefer"
+                if [ -f "$SCRIPT_DIR/lib/download_collage_torrents.py" ]; then
+                    python3 "$SCRIPT_DIR/lib/download_collage_torrents.py" "$collage_id" "$prefer"
                 fi
                 ;;
 
@@ -147,23 +147,23 @@ interactive_mode() {
 
                 case $crate_choice in
                     1)
-                        python3 "$SCRIPT_DIR/download_crate.py" --list-crates
+                        python3 "$SCRIPT_DIR/lib/download_crate.py" --list-crates
                         ;;
                     2)
                         read -p "Enter crate name: " crate_name
                         if [ -n "$crate_name" ]; then
-                            python3 "$SCRIPT_DIR/download_crate.py" --create-crate "$crate_name"
+                            python3 "$SCRIPT_DIR/lib/download_crate.py" --create-crate "$crate_name"
                         else
                             echo "❌ Please provide a crate name"
                         fi
                         ;;
                     3)
                         echo ""
-                        python3 "$SCRIPT_DIR/download_crate.py" --list-crates
+                        python3 "$SCRIPT_DIR/lib/download_crate.py" --list-crates
                         echo ""
                         read -p "Enter crate name to download: " download_crate
                         if [ -n "$download_crate" ]; then
-                            python3 "$SCRIPT_DIR/download_crate.py" --download-crate "$download_crate"
+                            python3 "$SCRIPT_DIR/lib/download_crate.py" --download-crate "$download_crate"
                         else
                             echo "❌ Please provide a crate name"
                         fi
@@ -181,7 +181,7 @@ interactive_mode() {
                 echo ""
                 echo "🎯 Load Crate and Browse"
                 echo "======================="
-                python3 "$SCRIPT_DIR/download_crate.py" --list-crates
+                python3 "$SCRIPT_DIR/lib/download_crate.py" --list-crates
                 echo ""
                 read -p "Enter crate name to load: " load_crate
                 if [ -n "$load_crate" ]; then
@@ -189,7 +189,7 @@ interactive_mode() {
                     if [ -n "$artist" ]; then
                         echo "🔍 Searching with crate functionality..."
                         # Use original script - search works perfectly!
-                        python3 "$SCRIPT_DIR/find_album_collages.py" --artist "$artist" --interactive
+                        python3 "$SCRIPT_DIR/lib/find_album_collages.py" --artist "$artist" --interactive
                     else
                         echo "❌ Artist name is required for browsing"
                     fi
@@ -223,18 +223,18 @@ case $1 in
     crate)
         case $2 in
             list)
-                python3 "$SCRIPT_DIR/download_crate.py" --list-crates
+                python3 "$SCRIPT_DIR/lib/download_crate.py" --list-crates
                 ;;
             create)
                 if [ -n "$3" ]; then
-                    python3 "$SCRIPT_DIR/download_crate.py" --create-crate "$3"
+                    python3 "$SCRIPT_DIR/lib/download_crate.py" --create-crate "$3"
                 else
                     echo "Usage: ./collage_tools crate create <crate_name>"
                 fi
                 ;;
             download)
                 if [ -n "$3" ]; then
-                    python3 "$SCRIPT_DIR/download_crate.py" --download-crate "$3"
+                    python3 "$SCRIPT_DIR/lib/download_crate.py" --download-crate "$3"
                 else
                     echo "Usage: ./collage_tools crate download <crate_name>"
                 fi
@@ -251,7 +251,7 @@ case $1 in
     find-album)
         shift
         # Always use the original working script - NO changes to search functionality!
-        python3 "$SCRIPT_DIR/find_album_collages.py" "$@"
+        python3 "$SCRIPT_DIR/lib/find_album_collages.py" "$@"
         ;;
 
     download)
@@ -283,7 +283,7 @@ case $1 in
             exit 1
         fi
 
-        python3 "$SCRIPT_DIR/download_collage_torrents.py" "$collage_id" "$@"
+        python3 "$SCRIPT_DIR/lib/download_collage_torrents.py" "$collage_id" "$@"
         ;;
 
     quick-search)
@@ -310,7 +310,7 @@ case $1 in
 
         if [ -n "$artist" ] || [ -n "$album" ]; then
             echo "🔍 Quick search for collages..."
-            python3 "$SCRIPT_DIR/find_album_collages.py" --artist "$artist" --album "$album"
+            python3 "$SCRIPT_DIR/lib/find_album_collages.py" --artist "$artist" --album "$album"
         else
             echo "Usage: ./collage_tools quick-search --artist 'Name' --album 'Name'"
         fi
