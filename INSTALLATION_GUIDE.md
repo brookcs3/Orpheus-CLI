@@ -137,7 +137,6 @@ orpheus
 ```
 
 Available options:
-
 1. **Find artist albums & releases** - Browse artist discographies
 2. **Find collages** - Discover curated collections
 3. **Download torrents** - Download from specific collages
@@ -148,7 +147,6 @@ Available options:
 ### Command Line Interface
 
 #### Artist Search
-
 ```bash
 # Interactive search with full results
 orpheus find-album --artist "The Beatles" --interactive
@@ -161,7 +159,6 @@ orpheus find-album --artist "The Beatles" --official-only
 ```
 
 #### Collage Operations
-
 ```bash
 # Find collages featuring an artist
 orpheus find-artist-collages "Radiohead"
@@ -173,7 +170,6 @@ orpheus download 6936 --prefer-flac   # FLAC Lossless
 ```
 
 #### Crate Management
-
 ```bash
 # List all crates
 orpheus crate list
@@ -188,13 +184,11 @@ orpheus crate download "My Favorites"
 ### Download Locations
 
 Torrents are saved to:
-
 - **macOS**: `~/Documents/Orpheus/`
 - **Windows**: `~/Documents/Orpheus/`
 - **Linux**: `~/Documents/Orpheus/`
 
 Collage downloads create subfolders like:
-
 ```
 ~/Documents/Orpheus/collage_6936_Sampled_by_The_Prodigy/
 ```
@@ -232,35 +226,30 @@ The tool automatically detects your operating system and uses the appropriate im
 ## Features
 
 ### 🎤 Artist Discovery
-
 - Browse complete artist discographies
 - Filter by release type (Albums, EPs, Singles)
 - Official vs. unofficial releases
 - Interactive browsing with pagination
 
 ### 🔍 Collage Exploration
-
 - Find collages containing specific artists
 - Discover music through curated collections
 - Search collages by name or keywords
 - Browse collage contents before downloading
 
 ### 📦 Crate System
-
 - Create wishlists while browsing
 - Save albums for later download
 - Bulk download entire collections
 - Organize music discovery workflow
 
 ### ⬇️ Smart Downloads
-
 - Multiple format options (320, V0, FLAC)
 - Automatic format preference handling
 - Batch download from collages
 - Progress tracking and error handling
 
 ### 🎵 Enhanced Interface
-
 - Interactive menu system
 - Color-coded output
 - Clear navigation and help
@@ -313,7 +302,6 @@ orpheus crate list
 ### Common Issues
 
 #### "Command not found" Error
-
 ```bash
 # Make sure the package is installed
 pip install orpheus-collage-tools
@@ -326,7 +314,6 @@ python -m orpheus_collage_tools.cli
 ```
 
 #### Configuration Issues
-
 ```bash
 # Delete and recreate config
 rm ~/.orpheus/config.json
@@ -334,14 +321,12 @@ orpheus  # Run setup again
 ```
 
 #### Permission Errors
-
 ```bash
 # Fix config file permissions
 chmod 600 ~/.orpheus/config.json
 ```
 
 #### Download Issues
-
 - Ensure you have write permissions to `~/Documents/Orpheus/`
 - Check your internet connection
 - Verify your Orpheus credentials are correct
@@ -371,21 +356,18 @@ python -c "from orpheus_collage_tools.core import OrpheusTools; print(OrpheusToo
 ## Security
 
 ### Credential Storage
-
 - API keys and passwords are stored locally only
 - Configuration files use secure permissions (600)
 - No data is transmitted except to Orpheus.network
 - Credentials are validated before storage
 
 ### Network Security
-
 - All communication uses HTTPS
 - API keys are sent in Authorization headers
 - No sensitive data is logged
 - Cookies are handled securely
 
 ### Best Practices
-
 - Keep your API key private
 - Don't share your configuration files
 - Use strong, unique passwords
@@ -394,14 +376,11 @@ python -c "from orpheus_collage_tools.core import OrpheusTools; print(OrpheusToo
 ## Development
 
 ### Source Code
-
 The source code is available on GitHub:
-
-- Repository: [https://github.com/cameronbrooks/orpheus-collage-tools](https://github.com/cameronbrooks/orpheus-collage-tools)
-- Issues: [https://github.com/cameronbrooks/orpheus-collage-tools/issues](https://github.com/cameronbrooks/orpheus-collage-tools/issues)
+- Repository: https://github.com/cameronbrooks/orpheus-collage-tools
+- Issues: https://github.com/cameronbrooks/orpheus-collage-tools/issues
 
 ### Contributing
-
 1. Fork the repository
 2. Create a feature branch
 3. Make your changes
@@ -409,7 +388,6 @@ The source code is available on GitHub:
 5. Submit a pull request
 
 ### Building from Source
-
 ```bash
 # Clone the repository
 git clone https://github.com/cameronbrooks/orpheus-collage-tools.git
@@ -423,7 +401,6 @@ python -m pytest
 ```
 
 ### Requirements
-
 - Python 3.8+
 - aiohttp>=3.8.0
 - beautifulsoup4>=4.11.0
@@ -436,14 +413,12 @@ MIT License - see LICENSE file for details.
 ## Support
 
 For issues, questions, or feature requests:
-
-- GitHub Issues: [https://github.com/cameronbrooks/orpheus-collage-tools/issues](https://github.com/cameronbrooks/orpheus-collage-tools/issues)
-- PyPI Page: [https://pypi.org/project/orpheus-collage-tools/](https://pypi.org/project/orpheus-collage-tools/)
+- GitHub Issues: https://github.com/cameronbrooks/orpheus-collage-tools/issues
+- PyPI Page: https://pypi.org/project/orpheus-collage-tools/
 
 ## Changelog
 
 ### Version 1.0.0
-
 - Initial release
 - Cross-platform support (macOS, Windows, Linux)
 - Interactive menu system
