@@ -21,7 +21,9 @@ class OrpheusCollageDownloader:
             if config_path.exists():
                 with open(config_path, 'r') as f:
                     config = json.load(f)
-                    api_key = config.get('api_key', 'PSTi7lCo1E4Q9IHgYJvVg3zVpBBUOpGEaer0t1l26Eg5bw1J7l88wk2ua1IGs8X8bCFMej8DFA4Kfb/lMzl3TdWIhx7d50KW6oYTcOEw8Ed7gDLcI6+C')
+                    api_key = config.get('api_key')
+        if not api_key:
+            raise ValueError("Missing API key. Please provide via argument or config file.")
         
         self.api_key = api_key
         self.base_url = "https://orpheus.network"

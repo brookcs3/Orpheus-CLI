@@ -22,9 +22,11 @@ class OrpheusAlbumSearcher:
             if config_path.exists():
                 with open(config_path, 'r') as f:
                     config = json.load(f)
-                    username = username or config.get('username', 'rezivor')
-                    password = password or config.get('password', 'Koolca00')
-                    api_key = api_key or config.get('api_key', 'PSTi7lCo1E4Q9IHgYJvVg3zVpBBUOpGEaer0t1l26Eg5bw1J7l88wk2ua1IGs8X8bCFMej8DFA4Kfb/lMzl3TdWIhx7d50KW6oYTcOEw8Ed7gDLcI6+C')
+                    username = username or config.get('username')
+                    password = password or config.get('password')
+                    api_key = api_key or config.get('api_key')
+        if not all([username, password, api_key]):
+            raise ValueError("Missing username, password, or api_key. Please provide via arguments or config file.")
 
         self.username = username
         self.password = password
