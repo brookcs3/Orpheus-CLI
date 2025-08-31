@@ -29,8 +29,8 @@ dependencies = [
 
 [project.urls]
 Homepage = "https://pypi.org/project/orpheus-collage-tools/"
-Repository = "https://github.com/cameronbrooks/orpheus-collage-tools"
-Issues = "https://github.com/cameronbrooks/orpheus-collage-tools/issues"
+Repository = "https://github.com/brookcs3/Orpheus-CLI"
+Issues = "https://github.com/brookcs3/Orpheus-CLI/issues"
 
 [project.scripts]
 orpheus = "orpheus_collage_tools.cli:main"

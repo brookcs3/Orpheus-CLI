@@ -397,8 +397,8 @@ python -c "from orpheus_collage_tools.core import OrpheusTools; print(OrpheusToo
 
 The source code is available on GitHub:
 
-- Repository: [https://github.com/cameronbrooks/orpheus-collage-tools](https://github.com/cameronbrooks/orpheus-collage-tools)
-- Issues: [https://github.com/cameronbrooks/orpheus-collage-tools/issues](https://github.com/cameronbrooks/orpheus-collage-tools/issues)
+- Repository: [https://github.com/brookcs3/Orpheus-CLI](https://github.com/brookcs3/Orpheus-CLI)
+- Issues: [https://github.com/brookcs3/Orpheus-CLI/issues](https://github.com/brookcs3/Orpheus-CLI/issues)
 
 ### Contributing
 
